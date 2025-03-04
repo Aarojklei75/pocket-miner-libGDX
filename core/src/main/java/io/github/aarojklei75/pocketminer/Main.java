@@ -15,7 +15,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-
+//head
 public class Main implements ApplicationListener {
     Texture backgroundTexture;
     Texture bucketTexture;
