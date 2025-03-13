@@ -1,6 +1,24 @@
 package io.github.aarojklei75.pocketminer;
 
-import com.badlogic.gdx.ApplicationListener;
+import javax.swing.JFrame;
+
+public class Main {
+    public static void main(String[] args) {
+
+        JFrame frame = new JFrame();
+        frame.setLocation(100,100);
+        frame.setSize(800,600);
+        frame.setTitle("PocketMiner");
+        frame.setVisible(true);
+
+
+
+
+    }
+}
+
+
+/*import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
@@ -17,7 +35,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 //hello
 //Test for audrey
-// Test for isabel
+//Test for isabel
+
 public class Main implements ApplicationListener {
     Texture backgroundTexture;
     Texture bucketTexture;
@@ -162,3 +181,4 @@ public class Main implements ApplicationListener {
 
     }
 }
+*/
