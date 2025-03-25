@@ -11,9 +11,6 @@ public class Main {
         frame.setTitle("PocketMiner");
         frame.setVisible(true);
 
-
-
-
     }
 }
 
