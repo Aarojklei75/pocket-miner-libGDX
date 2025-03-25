@@ -1,18 +1,105 @@
 package io.github.aarojklei75.pocketminer;
 
-import javax.swing.JFrame;
+import javax.swing.*;
+import java.awt.*;
+import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.SpriteCache;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
-public class Main {
-    public static void main(String[] args) {
+public class Main implements ApplicationListener {
+        Texture backgroundTexture;
+        FitViewport viewport;
+        Array<Sprite> dropSprites;
+        backgroundTexture = new Texture("background.png");
+        viewport = new FitViewport(8, 5);
+        SpriteBatch spriteBatch = new SpriteBatch();
+        dropSprites = new Array<>();
 
-        JFrame frame = new JFrame();
-        frame.setLocation(100,100);
-        frame.setSize(800,600);
-        frame.setTitle("PocketMiner");
-        frame.setVisible(true);
 
+//
+//        backgroundTexture.draw(backgroundTexture);
+//        JPanel panel = new JPanel() {
+//
+//            protected void paintComponent(Graphics g) {
+//                super.paintComponent(g);
+//                g.drawImage(backgroundTexture.get,0,0,getWidth(),getHeight(),this);
+//
+//            }
+//
+//        }
+
+//
+//        JFrame frame = new JFrame();
+//        frame.setLocation(100,100);
+//        frame.setSize(800,600);
+//        frame.setTitle("PocketMiner");
+//        frame.setContentPane(panel);
+//        frame.setVisible(true);
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    
+        private void draw() {
+            ScreenUtils.clear(Color.BLACK);
+            viewport.apply();
+            SpriteBatch.setProjectionMatrix(viewport.getCamera().combined);
+            SpriteBatch.begin();
+
+            float worldWidth = viewport.getWorldWidth();
+            float worldHeight = viewport.getWorldHeight();
+
+            spriteBatch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
+
+            for (Sprite dropSprite : dropSprites) {
+                dropSprite.draw(spriteBatch);
+            }
+
+            spriteBatch = new SpriteBatch();
+
+
+        }
+        @Override
+        public void create () {
+
+
+        }
+
+        @Override
+        public void resize ( int i, int i1){
+
+        }
+
+        @Override
+        public void render () {
+
+        }
+
+        @Override
+        public void pause () {
+
+        }
+
+        @Override
+        public void resume () {
+
+        }
+
+        @Override
+        public void dispose () {
+
+        }
     }
-}
 
 
 /*import com.badlogic.gdx.ApplicationListener;
