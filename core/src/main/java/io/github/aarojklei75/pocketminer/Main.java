@@ -1,33 +1,20 @@
 package io.github.aarojklei75.pocketminer;
 
-import javax.swing.*;
-import java.awt.*;
 import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.SpriteCache;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class Main implements ApplicationListener {
-        Texture backgroundTexture;
-        FitViewport viewport;
-        Array<Sprite> dropSprites;
-        backgroundTexture = new Texture("background.png");
-        viewport = new FitViewport(8, 5);
-        SpriteBatch spriteBatch = new SpriteBatch();
-        dropSprites = new Array<>();
 
+    Texture backgroundTexture;
+    FitViewport viewport;
+    Array<Sprite> dropSprites;
+    SpriteBatch spriteBatch;
 
 //
 //        backgroundTexture.draw(backgroundTexture);
@@ -49,57 +36,65 @@ public class Main implements ApplicationListener {
 //        frame.setContentPane(panel);
 //        frame.setVisible(true);
 //        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    
-        private void draw() {
-            ScreenUtils.clear(Color.BLACK);
-            viewport.apply();
-            SpriteBatch.setProjectionMatrix(viewport.getCamera().combined);
-            SpriteBatch.begin();
 
-            float worldWidth = viewport.getWorldWidth();
-            float worldHeight = viewport.getWorldHeight();
+    private void draw() {
+        ScreenUtils.clear(Color.BLACK);
+        viewport.apply();
+        spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
+        spriteBatch.begin();
 
-            spriteBatch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
+        float worldWidth = viewport.getWorldWidth();
+        float worldHeight = viewport.getWorldHeight();
 
-            for (Sprite dropSprite : dropSprites) {
-                dropSprite.draw(spriteBatch);
-            }
+        spriteBatch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
 
-            spriteBatch = new SpriteBatch();
+        //for (Sprite dropSprite : dropSprites) {
+        //    dropSprite.draw(spriteBatch);
+        //}
 
-
-        }
-        @Override
-        public void create () {
-
-
-        }
-
-        @Override
-        public void resize ( int i, int i1){
-
-        }
-
-        @Override
-        public void render () {
-
-        }
-
-        @Override
-        public void pause () {
-
-        }
-
-        @Override
-        public void resume () {
-
-        }
-
-        @Override
-        public void dispose () {
-
-        }
+        spriteBatch.end();
     }
+    @Override
+    public void create () {
+        backgroundTexture = new Texture("background.png");
+        spriteBatch = new SpriteBatch();
+        viewport = new FitViewport(8, 5);
+    }
+
+    @Override
+    public void resize (int width, int height){
+        viewport.update(width, height, true);
+
+    }
+
+    @Override
+    public void render () {
+        draw();
+    }
+
+    @Override
+    public void pause () {
+
+    }
+
+    @Override
+    public void resume () {
+
+    }
+
+    @Override
+    public void dispose () {
+        backgroundTexture.dispose();
+        spriteBatch.dispose();
+    }
+
+    public void input() {
+
+    }
+    public void logic() {
+
+    }
+}
 
 
 /*import com.badlogic.gdx.ApplicationListener;
