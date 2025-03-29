@@ -1,65 +1,87 @@
 package io.github.aarojklei75.pocketminer;
 
+import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class Main implements ApplicationListener {
-
+    //Asset Initializations
     Texture backgroundTexture;
+    Texture minerTexture;
+    Texture buttonTexture;
     FitViewport viewport;
     Array<Sprite> dropSprites;
     SpriteBatch spriteBatch;
+    Sprite buttonSprite;
+    Sprite minerSprite;
+    Rectangle minerRectangle;
+    Rectangle buttonBounds;
+    BitmapFont font;
+    int score;
 
-//
-//        backgroundTexture.draw(backgroundTexture);
-//        JPanel panel = new JPanel() {
-//
-//            protected void paintComponent(Graphics g) {
-//                super.paintComponent(g);
-//                g.drawImage(backgroundTexture.get,0,0,getWidth(),getHeight(),this);
-//
-//            }
-//
-//        }
+    @Override
+    public void create () {
+        backgroundTexture = new Texture("simple-level.png");
+        minerTexture = new Texture("default-miner.png");
+        buttonTexture = new Texture("button-test.png");
+        spriteBatch = new SpriteBatch();
+        viewport = new FitViewport(640, 480);
 
-//
-//        JFrame frame = new JFrame();
-//        frame.setLocation(100,100);
-//        frame.setSize(800,600);
-//        frame.setTitle("PocketMiner");
-//        frame.setContentPane(panel);
-//        frame.setVisible(true);
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //Miner Sprite
+        minerSprite = new Sprite(minerTexture);
+        minerSprite.setSize(70, 70);
+        minerSprite.setPosition(100, 150);
+
+        //Button Sprite
+        buttonSprite = new Sprite(buttonTexture);
+        buttonSprite.setSize(50, 50);
+        buttonSprite.setPosition(500, 150);
+
+        //Rectangle logic
+        minerRectangle = new Rectangle();
+        buttonBounds = new Rectangle(
+            buttonSprite.getX(), buttonSprite.getY(),
+            buttonSprite.getWidth(), buttonSprite.getHeight()
+            );
+
+        font = new BitmapFont();
+        font.setColor(Color.BLACK);
+        font.getData().setScale(2);
+
+    }
 
     private void draw() {
         ScreenUtils.clear(Color.BLACK);
         viewport.apply();
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
         spriteBatch.begin();
+        minerSprite.setPosition(100,150);
 
         float worldWidth = viewport.getWorldWidth();
         float worldHeight = viewport.getWorldHeight();
 
         spriteBatch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
-
-        //for (Sprite dropSprite : dropSprites) {
-        //    dropSprite.draw(spriteBatch);
-        //}
+        minerSprite.draw(spriteBatch);
+        buttonSprite.draw(spriteBatch);
+        font.draw(spriteBatch, "Score: " + score, 50,430);
 
         spriteBatch.end();
+
+        buttonBounds.setPosition(buttonSprite.getX(), buttonSprite.getY());
     }
-    @Override
-    public void create () {
-        backgroundTexture = new Texture("background.png");
-        spriteBatch = new SpriteBatch();
-        viewport = new FitViewport(8, 5);
-    }
+
 
     @Override
     public void resize (int width, int height){
@@ -70,6 +92,7 @@ public class Main implements ApplicationListener {
     @Override
     public void render () {
         draw();
+        input();
     }
 
     @Override
@@ -86,9 +109,25 @@ public class Main implements ApplicationListener {
     public void dispose () {
         backgroundTexture.dispose();
         spriteBatch.dispose();
+        font.dispose();
     }
 
     public void input() {
+
+        Gdx.input.setInputProcessor(new InputAdapter() {
+            public boolean touchDown (int screenX,int screenY,int pointer,int button) {
+                float worldX = screenX;
+                float worldY = viewport.getScreenHeight() - screenY;
+
+                if (buttonBounds.contains(worldX, worldY)) {
+                    score++;
+                }
+                return true;
+
+            }
+
+
+        });
 
     }
     public void logic() {
