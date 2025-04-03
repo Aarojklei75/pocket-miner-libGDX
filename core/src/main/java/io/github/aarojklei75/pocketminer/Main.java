@@ -22,6 +22,7 @@ public class Main implements ApplicationListener {
     Texture backgroundTexture;
     Texture minerTexture;
     Texture buttonTexture;
+    Texture toothpickTexture;
 
     //Viewport style
     FitViewport viewport;
@@ -31,6 +32,7 @@ public class Main implements ApplicationListener {
     SpriteBatch spriteBatch;
     Sprite buttonSprite;
     Sprite minerSprite;
+    Sprite toothpickSprite;
 
     //Rectangles for click detection
     Rectangle minerRectangle;
@@ -43,8 +45,9 @@ public class Main implements ApplicationListener {
     @Override
     public void create () {
         backgroundTexture = new Texture("simple-level.png");
-        minerTexture = new Texture("default-miner.png");
-        buttonTexture = new Texture("button-test.png");
+        minerTexture = new Texture("miner.png");
+        buttonTexture = new Texture("mineableobject-1.png");
+        toothpickTexture = new Texture("pickaxe-1.png");
         spriteBatch = new SpriteBatch();
         viewport = new FitViewport(640, 480);
 
@@ -52,6 +55,13 @@ public class Main implements ApplicationListener {
         minerSprite = new Sprite(minerTexture);
         minerSprite.setSize(70, 70);
         minerSprite.setPosition(100, 150);
+
+        //Pickaxe Sprites
+        toothpickSprite = new Sprite(toothpickTexture);
+        toothpickSprite.setSize(100, 100);
+        toothpickSprite.setPosition(150, 150);
+        toothpickSprite.setOrigin(150,150);
+        toothpickSprite.setRotation(90);
 
         //Button Sprite
         buttonSprite = new Sprite(buttonTexture);
@@ -76,12 +86,13 @@ public class Main implements ApplicationListener {
         viewport.apply();
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
         spriteBatch.begin();
-        minerSprite.setPosition(100,150);
+        minerSprite.setOrigin(100,150);
 
         float worldWidth = viewport.getWorldWidth();
         float worldHeight = viewport.getWorldHeight();
 
         spriteBatch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
+        toothpickSprite.draw(spriteBatch);
         minerSprite.draw(spriteBatch);
         buttonSprite.draw(spriteBatch);
         font.draw(spriteBatch, "Score: " + score, 50,430);
