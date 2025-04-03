@@ -17,17 +17,26 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class Main implements ApplicationListener {
-    //Asset Initializations
+
+    //Textures
     Texture backgroundTexture;
     Texture minerTexture;
     Texture buttonTexture;
+
+    //Viewport style
     FitViewport viewport;
+
+    //Sprites
     Array<Sprite> dropSprites;
     SpriteBatch spriteBatch;
     Sprite buttonSprite;
     Sprite minerSprite;
+
+    //Rectangles for click detection
     Rectangle minerRectangle;
     Rectangle buttonBounds;
+
+    //Score
     BitmapFont font;
     int score;
 
