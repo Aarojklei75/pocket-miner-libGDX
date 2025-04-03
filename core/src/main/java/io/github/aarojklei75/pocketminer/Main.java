@@ -15,6 +15,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.Preferences;
 
 public class Main implements ApplicationListener {
 
@@ -24,23 +25,30 @@ public class Main implements ApplicationListener {
     Texture buttonTexture;
     Texture toothpickTexture;
 
-    //Viewport style
+    // Viewport style
     FitViewport viewport;
 
-    //Sprites
+    // Sprites
     Array<Sprite> dropSprites;
     SpriteBatch spriteBatch;
     Sprite buttonSprite;
     Sprite minerSprite;
     Sprite toothpickSprite;
 
-    //Rectangles for click detection
+    // Rectangles for click detection
     Rectangle minerRectangle;
     Rectangle buttonBounds;
 
-    //Score
+    // Score
     BitmapFont font;
     int score;
+
+    // Save System
+    private Preferences prefs;
+    static final String KEY_SCORE = "score";
+    static final String KEY_LEVEL = "level";
+    static final String KEY_PLAYER_NAME = "playerName";
+
 
     @Override
     public void create () {
@@ -53,7 +61,7 @@ public class Main implements ApplicationListener {
 
         //Miner Sprite
         minerSprite = new Sprite(minerTexture);
-        minerSprite.setSize(70, 70);
+        minerSprite.setSize(100, 100);
         minerSprite.setPosition(100, 150);
 
         //Pickaxe Sprites
@@ -65,7 +73,7 @@ public class Main implements ApplicationListener {
 
         //Button Sprite
         buttonSprite = new Sprite(buttonTexture);
-        buttonSprite.setSize(50, 50);
+        buttonSprite.setSize(70, 70);
         buttonSprite.setPosition(500, 150);
 
         //Rectangle logic
@@ -78,6 +86,9 @@ public class Main implements ApplicationListener {
         font = new BitmapFont();
         font.setColor(Color.BLACK);
         font.getData().setScale(2);
+
+
+
 
     }
 
@@ -102,6 +113,18 @@ public class Main implements ApplicationListener {
         buttonBounds.setPosition(buttonSprite.getX(), buttonSprite.getY());
     }
 
+    // Save system
+    public void savePlayerData(int score, int level, String playerName) {
+        // Store data using the appropriate data types
+        prefs.putInteger(KEY_SCORE, score);
+        prefs.putInteger(KEY_LEVEL, level);
+        prefs.putString(KEY_PLAYER_NAME, playerName);
+
+    }
+
+
+
+
 
     @Override
     public void resize (int width, int height){
@@ -113,6 +136,17 @@ public class Main implements ApplicationListener {
     public void render () {
         draw();
         input();
+        // Clear the screen
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        // Begin drawing with the sprite batch
+        batch.begin();
+
+        // Draw the sprite (it will rotate based on the number of clicks)
+        sprite.draw(batch);
+
+        // End drawing with the sprite batch
+        batch.end
     }
 
     @Override
@@ -139,8 +173,17 @@ public class Main implements ApplicationListener {
                 float worldX = screenX;
                 float worldY = viewport.getScreenHeight() - screenY;
 
+
                 if (buttonBounds.contains(worldX, worldY)) {
                     score++;
+                    if (score % 2 == 0) {
+                        minerSprite.rotate(90);
+                    }
+                    if (score % 2 == 1) {
+                        minerSprite.setSize(100, 100);
+                        minerSprite.rotate(90);
+                    }
+
                 }
                 return true;
 
