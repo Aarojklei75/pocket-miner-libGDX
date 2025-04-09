@@ -1,47 +1,53 @@
 package io.github.aarojklei75.pocketminer;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.Preferences;
 
 public class Main implements ApplicationListener {
 
     //Textures
     Texture backgroundTexture;
     Texture minerTexture;
-    Texture buttonTexture;
-    Texture toothpickTexture;
+    Texture resourceTexture1;  // First resource texture
+    Texture resourceTexture2;  // Second resource texture
+    Texture currentResourceTexture;
+    Texture toolTexture1;
+    Texture toolTexture2;
+    Texture currentToolTexture;
+    Texture resourceChangeTexture;
+    Texture toolChangeTexture;
 
     // Viewport style
     FitViewport viewport;
 
     // Sprites
-    Array<Sprite> dropSprites;
     SpriteBatch spriteBatch;
-    Sprite buttonSprite;
+    Sprite resourceSprite;
     Sprite minerSprite;
-    Sprite toothpickSprite;
+    Sprite toolSprite;
+    Sprite resourceChangeSprite;
+    Sprite toolChangeSprite;
 
     // Rectangles for click detection
     Rectangle minerRectangle;
-    Rectangle buttonBounds;
+    Rectangle resourceBounds;
+    Rectangle resourceChangeBounds;
+    Rectangle toolChangeBounds;
 
     // Score
     BitmapFont font;
     int score;
+    int currentResource = 1;
+    int currentTool = 1;
 
     // Save System
     private Preferences prefs;
@@ -54,34 +60,66 @@ public class Main implements ApplicationListener {
     public void create () {
         backgroundTexture = new Texture("simple-level.png");
         minerTexture = new Texture("miner.png");
-        buttonTexture = new Texture("mineableobject-1.png");
-        toothpickTexture = new Texture("pickaxe-1.png");
+        resourceTexture1 = new Texture("mineableobject-1.png");
+        resourceTexture2 = new Texture("mineableobject2.png");
+        currentResourceTexture = resourceTexture1;
+        toolTexture1 = new Texture("pickaxe-1.png");
+        toolTexture2 = new Texture("pickaxe-2.png");
+        currentToolTexture = toolTexture1;
+        resourceChangeTexture = new Texture("resource-switch.png");
+        toolChangeTexture = new Texture("tool-switch.png");
+
         spriteBatch = new SpriteBatch();
         viewport = new FitViewport(640, 480);
 
         //Miner Sprite
         minerSprite = new Sprite(minerTexture);
-        minerSprite.setSize(100, 100);
+        minerSprite.setSize(200, 200);
         minerSprite.setPosition(100, 150);
 
         //Pickaxe Sprites
-        toothpickSprite = new Sprite(toothpickTexture);
-        toothpickSprite.setSize(100, 100);
-        toothpickSprite.setPosition(150, 150);
-        toothpickSprite.setOrigin(150,150);
-        toothpickSprite.setRotation(90);
+        toolSprite = new Sprite(currentToolTexture);
+        toolSprite.setSize(150, 150);
+        if (currentTool == 1) {
+            toolSprite.setRotation(100);
+            toolSprite.setPosition(185,180);
+        }
+        else if (currentTool == 2) {
+            toolSprite.setRotation(150);
+            toolSprite.setPosition(185, 200);
+        }
+
 
         //Button Sprite
-        buttonSprite = new Sprite(buttonTexture);
-        buttonSprite.setSize(70, 70);
-        buttonSprite.setPosition(500, 150);
+        resourceSprite = new Sprite(currentResourceTexture);
+        resourceSprite.setSize(70, 70);
+        resourceSprite.setPosition(500, 150);
+
+        //Resource change Sprite
+        resourceChangeSprite = new Sprite(resourceChangeTexture);
+        resourceChangeSprite.setSize(100, 50);
+        resourceChangeSprite.setPosition(viewport.getWorldWidth() / 2 - 125, 400);
+
+        //Tool change Sprite
+        toolChangeSprite = new Sprite(toolChangeTexture);
+        toolChangeSprite.setSize(100, 50);
+        toolChangeSprite.setPosition(viewport.getWorldWidth() / 2, 400);
+
 
         //Rectangle logic
         minerRectangle = new Rectangle();
-        buttonBounds = new Rectangle(
-            buttonSprite.getX(), buttonSprite.getY(),
-            buttonSprite.getWidth(), buttonSprite.getHeight()
+        resourceBounds = new Rectangle(
+            resourceSprite.getX(), resourceSprite.getY(),
+            resourceSprite.getWidth(), resourceSprite.getHeight()
             );
+        resourceChangeBounds = new Rectangle(
+            resourceChangeSprite.getX(), resourceChangeSprite.getY(),
+            resourceChangeSprite.getWidth(), resourceChangeSprite.getHeight()
+        );
+        toolChangeBounds = new Rectangle(
+            toolChangeSprite.getX(), toolChangeSprite.getY(),
+            toolChangeSprite.getWidth(), toolChangeSprite.getHeight()
+        );
 
         font = new BitmapFont();
         font.setColor(Color.BLACK);
@@ -97,20 +135,30 @@ public class Main implements ApplicationListener {
         viewport.apply();
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
         spriteBatch.begin();
-        minerSprite.setOrigin(100,150);
+
+        toolSprite.setOrigin(
+            toolSprite.getX()- toolSprite.getY()/2,
+            toolSprite.getX() - toolSprite.getY()/2
+            );
+        minerSprite.setOrigin(
+                minerSprite.getX()- minerSprite.getY()/2,
+                minerSprite.getX() - minerSprite.getY()/2
+            );
+
 
         float worldWidth = viewport.getWorldWidth();
         float worldHeight = viewport.getWorldHeight();
 
         spriteBatch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
-        toothpickSprite.draw(spriteBatch);
         minerSprite.draw(spriteBatch);
-        buttonSprite.draw(spriteBatch);
+        toolSprite.draw(spriteBatch);
+        resourceSprite.draw(spriteBatch);
+        toolChangeSprite.draw(spriteBatch);
+        resourceChangeSprite.draw(spriteBatch);
         font.draw(spriteBatch, "Score: " + score, 50,430);
 
         spriteBatch.end();
 
-        buttonBounds.setPosition(buttonSprite.getX(), buttonSprite.getY());
     }
 
     // Save system
@@ -137,16 +185,16 @@ public class Main implements ApplicationListener {
         draw();
         input();
         // Clear the screen
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Begin drawing with the sprite batch
-        batch.begin();
+        //batch.begin();
 
         // Draw the sprite (it will rotate based on the number of clicks)
-        sprite.draw(batch);
+        //sprite.draw(batch);
 
         // End drawing with the sprite batch
-        batch.end
+        //batch.end
     }
 
     @Override
@@ -162,204 +210,81 @@ public class Main implements ApplicationListener {
     @Override
     public void dispose () {
         backgroundTexture.dispose();
+        minerTexture.dispose();
+        resourceTexture1.dispose();
+        resourceTexture2.dispose();
+        toolTexture1.dispose();
+        toolTexture2.dispose();
+        resourceChangeTexture.dispose();
+        toolChangeTexture.dispose();
         spriteBatch.dispose();
         font.dispose();
+        prefs.flush();
     }
 
     public void input() {
-
         Gdx.input.setInputProcessor(new InputAdapter() {
-            public boolean touchDown (int screenX,int screenY,int pointer,int button) {
-                float worldX = screenX;
-                float worldY = viewport.getScreenHeight() - screenY;
+            @Override
+            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+                Vector2 touchPos = new Vector2(screenX, screenY);
+                viewport.unproject(touchPos);
 
+                // Resource change button logic
+                if (resourceChangeBounds.contains(touchPos.x, touchPos.y)) {
+                    if (currentResource == 1) {
+                        currentResourceTexture = resourceTexture2;
+                        currentResource = 2;
+                    } else {
+                        currentResourceTexture = resourceTexture1;
+                        currentResource = 1;
+                    }
+                    resourceSprite.setTexture(currentResourceTexture);
+                    return true;
+                }
 
-                if (buttonBounds.contains(worldX, worldY)) {
+                //Tool change button logic
+                if (toolChangeBounds.contains(touchPos.x, touchPos.y)) {
+                    if (currentTool == 1) {
+                        currentToolTexture = toolTexture2;
+                        toolSprite.setRotation(100);
+                        currentTool = 2;
+                    } else {
+                        currentToolTexture = toolTexture1;
+                        toolSprite.setRotation(150);
+                        currentTool = 1;
+                    }
+                    toolSprite.setTexture(currentToolTexture);
+                    return true;
+                }
+
+                // Resource click logic
+                if (resourceBounds.contains(touchPos.x, touchPos.y)) {
                     score++;
                     if (score % 2 == 0) {
-                        minerSprite.rotate(90);
+                        minerSprite.rotate(2);
+                        if (currentTool == 2) {
+                            toolSprite.rotate(2);
+                        }
+                        else {
+                            toolSprite.setPosition(184,180);
+                        }
                     }
-                    if (score % 2 == 1) {
-                        minerSprite.setSize(100, 100);
-                        minerSprite.rotate(90);
+                    else if (score % 2 == 1) {
+                        minerSprite.rotate(-2);
+                        if (currentTool == 2) {
+                            toolSprite.rotate(-2);
+                        }
+                        else {
+                            toolSprite.setPosition(190,180);
+                        }
                     }
-
                 }
-                return true;
 
+                return false;
             }
-
-
         });
-
     }
     public void logic() {
 
     }
 }
-
-
-/*import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-//hello
-//Test for audrey
-//Test for isabel
-
-public class Main implements ApplicationListener {
-    Texture backgroundTexture;
-    Texture bucketTexture;
-    Texture dropTexture;
-    Sound dropSound;
-    Music music;
-    SpriteBatch spriteBatch;
-    FitViewport viewport;
-    Sprite bucketSprite;
-    Vector2 touchPos;
-    Array<Sprite> dropSprites;
-    float dropTimer;
-    Rectangle bucketRectangle;
-    Rectangle dropRectangle;
-
-    @Override
-    public void create() {
-        backgroundTexture = new Texture("background.png");
-        bucketTexture = new Texture("bucket.png");
-        dropTexture = new Texture("drop.png");
-        dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.mp3"));
-        music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
-        spriteBatch = new SpriteBatch();
-        viewport = new FitViewport(8, 5);
-        bucketSprite = new Sprite(bucketTexture);
-        bucketSprite.setSize(1, 1);
-        touchPos = new Vector2();
-        dropSprites = new Array<>();
-        bucketRectangle = new Rectangle();
-        dropRectangle = new Rectangle();
-        music.setLooping(true);
-        music.setVolume(.5f);
-        music.play();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        viewport.update(width, height, true);
-    }
-
-    @Override
-    public void render() {
-        input();
-        logic();
-        draw();
-    }
-
-    private void input() {
-        float speed = 4f;
-        float delta = Gdx.graphics.getDeltaTime();
-
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            bucketSprite.translateX(speed * delta);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            bucketSprite.translateX(-speed * delta);
-        }
-
-        if (Gdx.input.isTouched()) {
-            touchPos.set(Gdx.input.getX(), Gdx.input.getY());
-            viewport.unproject(touchPos);
-            bucketSprite.setCenterX(touchPos.x);
-        }
-    }
-
-    private void logic() {
-        float worldWidth = viewport.getWorldWidth();
-        float worldHeight = viewport.getWorldHeight();
-        float bucketWidth = bucketSprite.getWidth();
-        float bucketHeight = bucketSprite.getHeight();
-
-        bucketSprite.setX(MathUtils.clamp(bucketSprite.getX(), 0, worldWidth - bucketWidth));
-
-        float delta = Gdx.graphics.getDeltaTime();
-        bucketRectangle.set(bucketSprite.getX(), bucketSprite.getY(), bucketWidth, bucketHeight);
-
-        for (int i = dropSprites.size - 1; i >= 0; i--) {
-            Sprite dropSprite = dropSprites.get(i);
-            float dropWidth = dropSprite.getWidth();
-            float dropHeight = dropSprite.getHeight();
-
-            dropSprite.translateY(-2f * delta);
-            dropRectangle.set(dropSprite.getX(), dropSprite.getY(), dropWidth, dropHeight);
-
-            if (dropSprite.getY() < -dropHeight) dropSprites.removeIndex(i);
-            else if (bucketRectangle.overlaps(dropRectangle)) {
-                dropSprites.removeIndex(i);
-                dropSound.play();
-            }
-        }
-
-        dropTimer += delta;
-        if (dropTimer > 1f) {
-            dropTimer = 0;
-            createDroplet();
-        }
-    }
-
-    private void draw() {
-        ScreenUtils.clear(Color.BLACK);
-        viewport.apply();
-        spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
-        spriteBatch.begin();
-
-        float worldWidth = viewport.getWorldWidth();
-        float worldHeight = viewport.getWorldHeight();
-
-        spriteBatch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
-        bucketSprite.draw(spriteBatch);
-
-        for (Sprite dropSprite : dropSprites) {
-            dropSprite.draw(spriteBatch);
-        }
-
-        spriteBatch.end();
-    }
-
-    private void createDroplet() {
-        float dropWidth = 1;
-        float dropHeight = 1;
-        float worldWidth = viewport.getWorldWidth();
-        float worldHeight = viewport.getWorldHeight();
-
-        Sprite dropSprite = new Sprite(dropTexture);
-        dropSprite.setSize(dropWidth, dropHeight);
-        dropSprite.setX(MathUtils.random(0f, worldWidth - dropWidth));
-        dropSprite.setY(worldHeight);
-        dropSprites.add(dropSprite);
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void dispose() {
-
-    }
-}
-*/
