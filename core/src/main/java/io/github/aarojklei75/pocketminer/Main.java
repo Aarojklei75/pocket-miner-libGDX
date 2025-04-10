@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
@@ -46,8 +45,14 @@ public class Main implements ApplicationListener {
     // Score
     BitmapFont font;
     int score;
+    //Switches
     int currentResource = 1;
     int currentTool = 1;
+    //Swing Animation
+    float pickaxeAngle = 0f;
+    boolean isSwinging = false;
+    float swingTime = 0f;
+    final float SWING_DURATION = 0.2f; //200 ms
 
     // Save System
     private Preferences prefs;
@@ -120,6 +125,14 @@ public class Main implements ApplicationListener {
             toolChangeSprite.getX(), toolChangeSprite.getY(),
             toolChangeSprite.getWidth(), toolChangeSprite.getHeight()
         );
+        toolSprite.setOrigin(
+            toolSprite.getX()- toolSprite.getY()/2,
+            toolSprite.getX() - toolSprite.getY()/2
+        );
+        minerSprite.setOrigin(
+            minerSprite.getX()- minerSprite.getY()/2,
+            minerSprite.getX() - minerSprite.getY()/2
+        );
 
         font = new BitmapFont();
         font.setColor(Color.BLACK);
@@ -135,16 +148,6 @@ public class Main implements ApplicationListener {
         viewport.apply();
         spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
         spriteBatch.begin();
-
-        toolSprite.setOrigin(
-            toolSprite.getX()- toolSprite.getY()/2,
-            toolSprite.getX() - toolSprite.getY()/2
-            );
-        minerSprite.setOrigin(
-                minerSprite.getX()- minerSprite.getY()/2,
-                minerSprite.getX() - minerSprite.getY()/2
-            );
-
 
         float worldWidth = viewport.getWorldWidth();
         float worldHeight = viewport.getWorldHeight();
@@ -182,6 +185,8 @@ public class Main implements ApplicationListener {
 
     @Override
     public void render () {
+        float delta = Gdx.graphics.getDeltaTime();
+        updateAnimation(delta);
         draw();
         input();
         // Clear the screen
@@ -246,45 +251,54 @@ public class Main implements ApplicationListener {
                 if (toolChangeBounds.contains(touchPos.x, touchPos.y)) {
                     if (currentTool == 1) {
                         currentToolTexture = toolTexture2;
-                        toolSprite.setRotation(100);
                         currentTool = 2;
                     } else {
                         currentToolTexture = toolTexture1;
-                        toolSprite.setRotation(150);
                         currentTool = 1;
                     }
                     toolSprite.setTexture(currentToolTexture);
                     return true;
                 }
 
+
+
                 // Resource click logic
                 if (resourceBounds.contains(touchPos.x, touchPos.y)) {
                     score++;
-                    if (score % 2 == 0) {
-                        minerSprite.rotate(2);
-                        if (currentTool == 2) {
-                            toolSprite.rotate(2);
-                        }
-                        else {
-                            toolSprite.setPosition(184,180);
-                        }
-                    }
-                    else if (score % 2 == 1) {
-                        minerSprite.rotate(-2);
-                        if (currentTool == 2) {
-                            toolSprite.rotate(-2);
-                        }
-                        else {
-                            toolSprite.setPosition(190,180);
-                        }
+
+                    if (!isSwinging) {
+                        isSwinging = true;
+                        swingTime = 0f;
+
                     }
                 }
 
                 return false;
+
             }
         });
     }
     public void logic() {
 
+    }
+    private void updateAnimation(float delta) {
+        if (isSwinging) {
+            swingTime += delta;
+
+            float progress = swingTime / SWING_DURATION;
+            System.out.print("Progress = " + progress);
+
+            if (progress < 0.5f) {
+                pickaxeAngle = -90 * (progress * 2); // swing down
+            } else if (progress < 1f) {
+                pickaxeAngle = -90 * (2 - progress * 2); // swing back up
+            } else {
+                isSwinging = false;
+                pickaxeAngle = 0f;
+                swingTime = 0f;
+            }
+
+            toolSprite.setRotation(pickaxeAngle); // update rotation
+        }
     }
 }
