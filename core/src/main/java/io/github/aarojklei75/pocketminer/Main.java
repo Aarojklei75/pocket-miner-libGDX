@@ -58,7 +58,7 @@ public class Main implements ApplicationListener {
 
     @Override
     public void create () {
-        backgroundTexture = new Texture("simple-level.png");
+        backgroundTexture = new Texture("pocketMinerBackground01.png");
         minerTexture = new Texture("miner.png");
         resourceTexture1 = new Texture("mineableobject-1.png");
         resourceTexture2 = new Texture("mineableobject2.png");
@@ -79,9 +79,9 @@ public class Main implements ApplicationListener {
 
         //Pickaxe Sprites
         toolSprite = new Sprite(currentToolTexture);
-        toolSprite.setSize(150, 150);
+        toolSprite.setSize(150, 190);
         if (currentTool == 1) {
-            toolSprite.setRotation(100);
+            toolSprite.setRotation(0);
             toolSprite.setPosition(185,180);
         }
         else if (currentTool == 2) {
@@ -121,7 +121,7 @@ public class Main implements ApplicationListener {
             toolChangeSprite.getWidth(), toolChangeSprite.getHeight()
         );
         toolSprite.setOrigin(
-            toolSprite.getX()- toolSprite.getY()/2,
+            toolSprite.getX() - toolSprite.getY()/2,
             toolSprite.getX() - toolSprite.getY()/2
         );
         minerSprite.setOrigin(
@@ -208,7 +208,7 @@ public class Main implements ApplicationListener {
         toolChangeTexture.dispose();
         spriteBatch.dispose();
         font.dispose();
-        prefs.flush();
+        //prefs.flush();
     }
 
     public void input() {
