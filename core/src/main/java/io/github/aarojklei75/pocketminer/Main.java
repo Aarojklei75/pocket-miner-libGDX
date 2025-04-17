@@ -58,7 +58,7 @@ public class Main implements ApplicationListener {
 
     @Override
     public void create () {
-        backgroundTexture = new Texture("simple-level.png");
+        backgroundTexture = new Texture("pocketMinerBackground01.png");
         minerTexture = new Texture("miner.png");
         resourceTexture1 = new Texture("mineableobject-1.png");
         resourceTexture2 = new Texture("mineableobject2.png");
