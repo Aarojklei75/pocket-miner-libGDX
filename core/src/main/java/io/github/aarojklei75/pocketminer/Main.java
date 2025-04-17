@@ -54,11 +54,6 @@ public class Main implements ApplicationListener {
     float swingTime = 0f;
     final float SWING_DURATION = 0.2f; //200 ms
 
-    // Save System
-    private Preferences prefs;
-    static final String KEY_SCORE = "score";
-    static final String KEY_LEVEL = "level";
-    static final String KEY_PLAYER_NAME = "playerName";
 
 
     @Override
@@ -163,17 +158,6 @@ public class Main implements ApplicationListener {
         spriteBatch.end();
 
     }
-
-    // Save system
-    public void savePlayerData(int score, int level, String playerName) {
-        // Store data using the appropriate data types
-        prefs.putInteger(KEY_SCORE, score);
-        prefs.putInteger(KEY_LEVEL, level);
-        prefs.putString(KEY_PLAYER_NAME, playerName);
-
-    }
-
-
 
 
 
