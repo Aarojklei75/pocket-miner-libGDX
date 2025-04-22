@@ -173,11 +173,10 @@ public class Main implements ApplicationListener {
 
         // Preferences-based saving
         prefs = Gdx.app.getPreferences("GameSave");
-        loadGame(); // Optionally load saved data on startup
 
         // JSON-based saving
         json = new Json();
-        loadGame(); // Automatically load data when the game starts
+        loadGame();
 
 
 
@@ -202,6 +201,7 @@ public class Main implements ApplicationListener {
         font.draw(spriteBatch, "Score: " + score, 50,430);
 
         spriteBatch.end();
+
 
     }
 
