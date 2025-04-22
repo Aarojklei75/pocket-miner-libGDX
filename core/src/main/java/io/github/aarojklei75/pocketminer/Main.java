@@ -111,7 +111,7 @@ public class Main implements ApplicationListener {
         resourceBounds = new Rectangle(
             resourceSprite.getX(), resourceSprite.getY(),
             resourceSprite.getWidth(), resourceSprite.getHeight()
-            );
+        );
         resourceChangeBounds = new Rectangle(
             resourceChangeSprite.getX(), resourceChangeSprite.getY(),
             resourceChangeSprite.getWidth(), resourceChangeSprite.getHeight()
