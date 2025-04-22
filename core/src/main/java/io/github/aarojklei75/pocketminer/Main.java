@@ -10,6 +10,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.Input;
 
 public class Main implements ApplicationListener {
 
@@ -54,6 +57,41 @@ public class Main implements ApplicationListener {
     float swingTime = 0f;
     final float SWING_DURATION = 0.2f; //200 ms
 
+    // LibGDX save-system
+    Preferences prefs;
+
+    // JSON-based saving
+    private static final String SAVE_FILE = "savegame.json";
+    private Json json;
+
+    // Method that saves the game
+    private void saveGame() {
+        SaveData data = new SaveData();
+        data.score = score;
+        data.currentTool = currentTool;
+        data.currentResource = currentResource;
+
+        FileHandle file = Gdx.files.local(SAVE_FILE);
+        file.writeString(json.toJson(data), false);
+    }
+
+    // Method that loads the game
+    private void loadGame() {
+        FileHandle file = Gdx.files.local(SAVE_FILE);
+        if (file.exists()) {
+            SaveData data = json.fromJson(SaveData.class, file.readString());
+            score = data.score;
+            currentTool = data.currentTool;
+            currentResource = data.currentResource;
+
+            // Restore correct textures
+            currentToolTexture = (currentTool == 1) ? toolTexture1 : toolTexture2;
+            toolSprite.setTexture(currentToolTexture);
+
+            currentResourceTexture = (currentResource == 1) ? resourceTexture1 : resourceTexture2;
+            resourceSprite.setTexture(currentResourceTexture);
+        }
+    }
 
 
     @Override
@@ -133,6 +171,14 @@ public class Main implements ApplicationListener {
         font.setColor(Color.BLACK);
         font.getData().setScale(2);
 
+        // Preferences-based saving
+        prefs = Gdx.app.getPreferences("GameSave");
+        loadGame(); // Optionally load saved data on startup
+
+        // JSON-based saving
+        json = new Json();
+        loadGame(); // Automatically load data when the game starts
+
 
 
 
@@ -159,8 +205,6 @@ public class Main implements ApplicationListener {
 
     }
 
-
-
     @Override
     public void resize (int width, int height){
         viewport.update(width, height, true);
@@ -173,6 +217,17 @@ public class Main implements ApplicationListener {
         updateAnimation(delta);
         draw();
         input();
+
+        // Manual Save/Load via key input (for debugging)
+        if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+            saveGame();
+            System.out.println("Game saved.");
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
+            loadGame();
+            System.out.println("Game loaded.");
+        }
+
         // Clear the screen
         //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -188,7 +243,7 @@ public class Main implements ApplicationListener {
 
     @Override
     public void pause () {
-
+        saveGame();
     }
 
     @Override
@@ -208,7 +263,7 @@ public class Main implements ApplicationListener {
         toolChangeTexture.dispose();
         spriteBatch.dispose();
         font.dispose();
-        prefs.flush();
+        //prefs.flush();
     }
 
     public void input() {
@@ -228,6 +283,7 @@ public class Main implements ApplicationListener {
                         currentResource = 1;
                     }
                     resourceSprite.setTexture(currentResourceTexture);
+                    saveGame();
                     return true;
                 }
 
@@ -241,10 +297,9 @@ public class Main implements ApplicationListener {
                         currentTool = 1;
                     }
                     toolSprite.setTexture(currentToolTexture);
+                    saveGame();
                     return true;
                 }
-
-
 
                 // Resource click logic
                 if (resourceBounds.contains(touchPos.x, touchPos.y)) {
@@ -253,17 +308,13 @@ public class Main implements ApplicationListener {
                     if (!isSwinging) {
                         isSwinging = true;
                         swingTime = 0f;
-
                     }
                 }
-
                 return false;
-
             }
         });
     }
     public void logic() {
-
     }
     private void updateAnimation(float delta) {
         if (isSwinging) {
@@ -281,7 +332,6 @@ public class Main implements ApplicationListener {
                 pickaxeAngle = 0f;
                 swingTime = 0f;
             }
-
             toolSprite.setRotation(pickaxeAngle); // update rotation
         }
     }
