@@ -27,6 +27,10 @@ public class Main implements ApplicationListener {
     Texture currentToolTexture;
     Texture resourceChangeTexture;
     Texture toolChangeTexture;
+    Texture healthBarTexture;
+
+    // Health Bar
+    HealthBar healthBar;
 
     // Viewport style
     FitViewport viewport;
@@ -48,17 +52,18 @@ public class Main implements ApplicationListener {
     // Score
     BitmapFont font;
     int score;
-    //Switches
+    // Switches
     int currentResource = 1;
     int currentTool = 1;
-    //Swing Animation
+    // Swing Animation
     float pickaxeAngle = 0f;
     boolean isSwinging = false;
     float swingTime = 0f;
     final float SWING_DURATION = 0.2f;//200 ms
 
+    // Timer Settings for resource change
     float timeSeconds = 0f;
-    float period = 5f;
+    float period = 20f;
 
     // LibGDX save-system
     Preferences prefs;
@@ -109,6 +114,7 @@ public class Main implements ApplicationListener {
         currentToolTexture = toolTexture1;
         resourceChangeTexture = new Texture("resource-switch.png");
         toolChangeTexture = new Texture("tool-switch.png");
+        healthBarTexture = new Texture ("healthBarTexture.png");
 
         spriteBatch = new SpriteBatch();
         viewport = new FitViewport(640, 480);
@@ -131,10 +137,20 @@ public class Main implements ApplicationListener {
         }
 
 
-        //Button Sprite
+        // Button Sprite
         resourceSprite = new Sprite(currentResourceTexture);
         resourceSprite.setSize(70, 70);
         resourceSprite.setPosition(500, 150);
+
+        // HealthBar Sprite
+        healthBar = new HealthBar
+            (10,
+                resourceSprite.getX(),
+                resourceSprite.getY() + resourceSprite.getHeight(),
+                resourceSprite.getWidth(),
+                15,
+                healthBarTexture
+            );
 
         //Resource change Sprite
         resourceChangeSprite = new Sprite(resourceChangeTexture);
@@ -196,11 +212,13 @@ public class Main implements ApplicationListener {
         float worldHeight = viewport.getWorldHeight();
 
         spriteBatch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
+        healthBar.draw(spriteBatch);
         minerSprite.draw(spriteBatch);
         toolSprite.draw(spriteBatch);
         resourceSprite.draw(spriteBatch);
         toolChangeSprite.draw(spriteBatch);
         resourceChangeSprite.draw(spriteBatch);
+
         font.draw(spriteBatch, "Score: " + score, 50,430);
 
         spriteBatch.end();
@@ -308,13 +326,25 @@ public class Main implements ApplicationListener {
 
                 // Resource click logic
                 if (resourceBounds.contains(touchPos.x, touchPos.y)) {
-                    score++;
+                    if (!healthBar.isEmpty()) {
+                        healthBar.reduceHealth();
+                        score++;
+                    }
+
+                    if (healthBar.isEmpty()) {
+                        healthBar.reset();
+                        changeResource();
+                    }
 
                     if (!isSwinging) {
                         isSwinging = true;
                         swingTime = 0f;
                     }
+
+                    return true;
                 }
+
+
                 return false;
             }
         });
