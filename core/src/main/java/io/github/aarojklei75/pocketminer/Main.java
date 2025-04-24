@@ -55,7 +55,10 @@ public class Main implements ApplicationListener {
     float pickaxeAngle = 0f;
     boolean isSwinging = false;
     float swingTime = 0f;
-    final float SWING_DURATION = 0.2f; //200 ms
+    final float SWING_DURATION = 0.2f;//200 ms
+
+    float timeSeconds = 0f;
+    float period = 5f;
 
     // LibGDX save-system
     Preferences prefs;
@@ -214,9 +217,11 @@ public class Main implements ApplicationListener {
     @Override
     public void render () {
         float delta = Gdx.graphics.getDeltaTime();
+        timeSeconds += delta;
         updateAnimation(delta);
         draw();
         input();
+        logic(timeSeconds,period);
 
         // Manual Save/Load via key input (for debugging)
         if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
@@ -314,7 +319,22 @@ public class Main implements ApplicationListener {
             }
         });
     }
-    public void logic() {
+    public void logic(float timeSeconds, float period) {
+        if (this.timeSeconds > period) {
+            this.timeSeconds -= period;
+            changeResource();
+        }
+    }
+    public void changeResource() {
+        if (currentResource == 1) {
+            currentResourceTexture = resourceTexture2;
+            currentResource = 2;
+        } else {
+            currentResourceTexture = resourceTexture1;
+            currentResource = 1;
+        }
+        resourceSprite.setTexture(currentResourceTexture);
+
     }
     private void updateAnimation(float delta) {
         if (isSwinging) {
