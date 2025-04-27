@@ -28,6 +28,7 @@ public class Main implements ApplicationListener {
     Texture resourceChangeTexture;
     Texture toolChangeTexture;
     Texture healthBarTexture;
+    Texture resetScoreTexture;
 
     // Health Bar
     HealthBar healthBar;
@@ -42,12 +43,14 @@ public class Main implements ApplicationListener {
     Sprite toolSprite;
     Sprite resourceChangeSprite;
     Sprite toolChangeSprite;
+    Sprite resetScoreSprite;
 
     // Rectangles for click detection
     Rectangle minerRectangle;
     Rectangle resourceBounds;
     Rectangle resourceChangeBounds;
     Rectangle toolChangeBounds;
+    Rectangle resetScoreBounds;
 
     // Score
     BitmapFont font;
@@ -104,16 +107,25 @@ public class Main implements ApplicationListener {
 
     @Override
     public void create () {
-        backgroundTexture = new Texture("pocketMinerBackground01.png");
+        backgroundTexture = new Texture("pocketMinerBackground01_alt3.png");
         minerTexture = new Texture("miner.png");
+
+        //Resources
         resourceTexture1 = new Texture("mineableobject-1.png");
         resourceTexture2 = new Texture("mineableobject2.png");
         currentResourceTexture = resourceTexture1;
+
+        //Tools
         toolTexture1 = new Texture("pickaxe-1.png");
         toolTexture2 = new Texture("pickaxe-2.png");
         currentToolTexture = toolTexture1;
+
+        //Buttons
         resourceChangeTexture = new Texture("resource-switch.png");
         toolChangeTexture = new Texture("tool-switch.png");
+        resetScoreTexture = new Texture("resetScore.png");
+
+        //Healh Bar
         healthBarTexture = new Texture ("healthBarTexture.png");
 
         spriteBatch = new SpriteBatch();
@@ -155,12 +167,17 @@ public class Main implements ApplicationListener {
         //Resource change Sprite
         resourceChangeSprite = new Sprite(resourceChangeTexture);
         resourceChangeSprite.setSize(100, 50);
-        resourceChangeSprite.setPosition(viewport.getWorldWidth() / 2 - 125, 400);
+        resourceChangeSprite.setPosition(viewport.getWorldWidth() / 2 - 100, 400);
 
         //Tool change Sprite
         toolChangeSprite = new Sprite(toolChangeTexture);
         toolChangeSprite.setSize(100, 50);
-        toolChangeSprite.setPosition(viewport.getWorldWidth() / 2, 400);
+        toolChangeSprite.setPosition(viewport.getWorldWidth() / 2 + 25, 400);
+
+        //Reset Score Button
+        resetScoreSprite = new Sprite(resetScoreTexture);
+        resetScoreSprite.setSize(100, 50);
+        resetScoreSprite.setPosition(viewport.getWorldWidth() / 2 + 150, 400);
 
 
         //Rectangle logic
@@ -176,6 +193,10 @@ public class Main implements ApplicationListener {
         toolChangeBounds = new Rectangle(
             toolChangeSprite.getX(), toolChangeSprite.getY(),
             toolChangeSprite.getWidth(), toolChangeSprite.getHeight()
+        );
+        resetScoreBounds = new Rectangle(
+            resetScoreSprite.getX(), resetScoreSprite.getY(),
+            resetScoreSprite.getWidth(), resetScoreSprite.getHeight()
         );
         toolSprite.setOrigin(
             toolSprite.getX() - toolSprite.getY()/2,
@@ -218,6 +239,7 @@ public class Main implements ApplicationListener {
         resourceSprite.draw(spriteBatch);
         toolChangeSprite.draw(spriteBatch);
         resourceChangeSprite.draw(spriteBatch);
+        resetScoreSprite.draw(spriteBatch);
 
         font.draw(spriteBatch, "Score: " + score, 50,430);
 
@@ -284,6 +306,7 @@ public class Main implements ApplicationListener {
         toolTexture2.dispose();
         resourceChangeTexture.dispose();
         toolChangeTexture.dispose();
+        resetScoreTexture.dispose();
         spriteBatch.dispose();
         font.dispose();
         //prefs.flush();
@@ -323,16 +346,19 @@ public class Main implements ApplicationListener {
                     saveGame();
                     return true;
                 }
+                if (resetScoreBounds.contains(touchPos.x, touchPos.y)) {
+                    score = 0;
+                }
 
                 // Resource click logic
                 if (resourceBounds.contains(touchPos.x, touchPos.y)) {
                     if (!healthBar.isEmpty()) {
                         healthBar.reduceHealth();
-                        score++;
                     }
 
                     if (healthBar.isEmpty()) {
                         healthBar.reset();
+                        score++;
                         changeResource();
                     }
 
