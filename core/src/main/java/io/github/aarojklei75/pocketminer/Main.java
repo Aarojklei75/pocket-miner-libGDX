@@ -21,6 +21,10 @@ public class Main implements ApplicationListener {
     Texture minerTexture;
     Texture resourceTexture1;  // First resource texture
     Texture resourceTexture2;  // Second resource texture
+    Texture resourceTexture3;
+    Texture resourceTexture4;
+    Texture resourceTexture5;
+    Texture resourceTexture6;
     Texture currentResourceTexture;
     Texture toolTexture1;
     Texture toolTexture2;
@@ -113,6 +117,10 @@ public class Main implements ApplicationListener {
         //Resources
         resourceTexture1 = new Texture("mineableobject-1.png");
         resourceTexture2 = new Texture("mineableobject2.png");
+        resourceTexture3 = new Texture("mineableobject3.png");
+        resourceTexture4 = new Texture("mineableobject4.png");
+        resourceTexture5 = new Texture("mineableobject5.png");
+        resourceTexture6 = new Texture("mineableobject6.png");
         currentResourceTexture = resourceTexture1;
 
         //Tools
