@@ -13,26 +13,14 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.Input;
+import static io.github.aarojklei75.pocketminer.Textures.*;
 
 public class Main implements ApplicationListener {
 
-    //Textures
-    Texture backgroundTexture;
-    Texture minerTexture;
-    Texture resourceTexture1;  // First resource texture
-    Texture resourceTexture2;  // Second resource texture
-    Texture resourceTexture3;
-    Texture resourceTexture4;
-    Texture resourceTexture5;
-    Texture resourceTexture6;
-    Texture currentResourceTexture;
-    Texture toolTexture1;
-    Texture toolTexture2;
     Texture currentToolTexture;
-    Texture resourceChangeTexture;
-    Texture toolChangeTexture;
-    Texture healthBarTexture;
-    Texture resetScoreTexture;
+    Texture currentResourceTexture;
+    Texture[] resourceTextures;
+    Texture backgroundTexture;
 
     // Health Bar
     HealthBar healthBar;
@@ -60,7 +48,7 @@ public class Main implements ApplicationListener {
     BitmapFont font;
     int score;
     // Switches
-    int currentResource = 1;
+    int currentResourceIndex = 1;
     int currentTool = 1;
     // Swing Animation
     float pickaxeAngle = 0f;
@@ -84,57 +72,41 @@ public class Main implements ApplicationListener {
         SaveData data = new SaveData();
         data.score = score;
         data.currentTool = currentTool;
-        data.currentResource = currentResource;
+        data.currentResource = currentResourceIndex;
 
         FileHandle file = Gdx.files.local(SAVE_FILE);
         file.writeString(json.toJson(data), false);
     }
 
     // Method that loads the game
-    private void loadGame() {
-        FileHandle file = Gdx.files.local(SAVE_FILE);
-        if (file.exists()) {
-            SaveData data = json.fromJson(SaveData.class, file.readString());
-            score = data.score;
-            currentTool = data.currentTool;
-            currentResource = data.currentResource;
-
-            // Restore correct textures
-            currentToolTexture = (currentTool == 1) ? toolTexture1 : toolTexture2;
-            toolSprite.setTexture(currentToolTexture);
-
-            currentResourceTexture = (currentResource == 1) ? resourceTexture1 : resourceTexture2;
-            resourceSprite.setTexture(currentResourceTexture);
-        }
-    }
 
 
     @Override
     public void create () {
-        backgroundTexture = new Texture("pocketMinerBackground01_alt3.png");
-        minerTexture = new Texture("miner.png");
+        // Load assets
+        Textures.load();
 
-        //Resources
-        resourceTexture1 = new Texture("mineableobject-1.png");
-        resourceTexture2 = new Texture("mineableobject2.png");
-        resourceTexture3 = new Texture("mineableobject3.png");
-        resourceTexture4 = new Texture("mineableobject4.png");
-        resourceTexture5 = new Texture("mineableobject5.png");
-        resourceTexture6 = new Texture("mineableobject6.png");
-        currentResourceTexture = resourceTexture1;
+        resourceTextures = new Texture[] {
+            Textures.resourceTexture1,
+            Textures.resourceTexture2,
+            Textures.resourceTexture3,
+            Textures.resourceTexture4,
+            Textures.resourceTexture5,
+            Textures.resourceTexture6
+        };
 
-        //Tools
-        toolTexture1 = new Texture("pickaxe-1.png");
-        toolTexture2 = new Texture("pickaxe-2.png");
+        backgroundTexture = Textures.backgroundTexture;
+        Texture minerTexture = Textures.minerTexture;
+        currentResourceTexture = resourceTextures[currentResourceIndex];
+        Texture toolTexture1 = Textures.toolTexture1;
+        Texture toolTexture2 = Textures.toolTexture2;
         currentToolTexture = toolTexture1;
+        Texture resourceChangeTexture = Textures.resourceChangeTexture;
+        Texture toolChangeTexture = Textures.toolChangeTexture;
+        Texture resetScoreTexture = Textures.resetScoreTexture;
+        Texture healthBarTexture = Textures.healthBarTexture;
 
-        //Buttons
-        resourceChangeTexture = new Texture("resource-switch.png");
-        toolChangeTexture = new Texture("tool-switch.png");
-        resetScoreTexture = new Texture("resetScore.png");
 
-        //Healh Bar
-        healthBarTexture = new Texture ("healthBarTexture.png");
 
         spriteBatch = new SpriteBatch();
         viewport = new FitViewport(640, 480);
@@ -149,7 +121,7 @@ public class Main implements ApplicationListener {
         toolSprite.setSize(150, 190);
         if (currentTool == 1) {
             toolSprite.setRotation(0);
-            toolSprite.setPosition(185,180);
+            toolSprite.setPosition(minerSprite.getX() + 85, minerSprite.getY() + 50);
         }
         else if (currentTool == 2) {
             toolSprite.setRotation(150);
@@ -224,12 +196,14 @@ public class Main implements ApplicationListener {
 
         // JSON-based saving
         json = new Json();
-        loadGame();
 
+        try {
+            loadGame();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-
-
-    }
+        }
 
     private void draw() {
         ScreenUtils.clear(Color.BLACK);
@@ -306,17 +280,9 @@ public class Main implements ApplicationListener {
 
     @Override
     public void dispose () {
-        backgroundTexture.dispose();
-        minerTexture.dispose();
-        resourceTexture1.dispose();
-        resourceTexture2.dispose();
-        toolTexture1.dispose();
-        toolTexture2.dispose();
-        resourceChangeTexture.dispose();
-        toolChangeTexture.dispose();
-        resetScoreTexture.dispose();
         spriteBatch.dispose();
         font.dispose();
+        Textures.dispose();
         //prefs.flush();
     }
 
@@ -329,14 +295,7 @@ public class Main implements ApplicationListener {
 
                 // Resource change button logic
                 if (resourceChangeBounds.contains(touchPos.x, touchPos.y)) {
-                    if (currentResource == 1) {
-                        currentResourceTexture = resourceTexture2;
-                        currentResource = 2;
-                    } else {
-                        currentResourceTexture = resourceTexture1;
-                        currentResource = 1;
-                    }
-                    resourceSprite.setTexture(currentResourceTexture);
+                    changeResource();
                     saveGame();
                     return true;
                 }
@@ -390,13 +349,8 @@ public class Main implements ApplicationListener {
         }
     }
     public void changeResource() {
-        if (currentResource == 1) {
-            currentResourceTexture = resourceTexture2;
-            currentResource = 2;
-        } else {
-            currentResourceTexture = resourceTexture1;
-            currentResource = 1;
-        }
+        currentResourceIndex = (currentResourceIndex + 1) % resourceTextures.length;
+        currentResourceTexture = resourceTextures[currentResourceIndex];
         resourceSprite.setTexture(currentResourceTexture);
 
     }
@@ -417,6 +371,23 @@ public class Main implements ApplicationListener {
                 swingTime = 0f;
             }
             toolSprite.setRotation(pickaxeAngle); // update rotation
+        }
+    }
+
+    private void loadGame() {
+        FileHandle file = Gdx.files.local(SAVE_FILE);
+        if (file.exists()) {
+            SaveData data = json.fromJson(SaveData.class, file.readString());
+            score = data.score;
+            currentTool = data.currentTool;
+            currentResourceIndex = data.currentResource;
+
+            currentResourceTexture = resourceTextures[currentResourceIndex];
+            resourceSprite.setTexture(currentResourceTexture);
+
+            currentToolTexture = (currentTool == 1) ? Textures.toolTexture1 : Textures.toolTexture2;
+            toolSprite.setTexture(currentToolTexture);
+
         }
     }
 }
