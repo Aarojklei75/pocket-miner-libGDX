@@ -1,9 +1,10 @@
 package io.github.aarojklei75.pocketminer;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 
 public class Textures {
-    // Textures
     protected static Texture backgroundTexture;
     protected static Texture minerTexture;
     protected static Texture resourceTexture1;
@@ -19,38 +20,81 @@ public class Textures {
     protected static Texture resetScoreTexture;
     protected static Texture healthBarTexture;
 
-    // Load all assets
     public static void load() {
-        backgroundTexture = new Texture("pocketMinerBackground01_alt3.png");
-        minerTexture = new Texture("miner.png");
+        try {
+            backgroundTexture = new Texture("pocketMinerBackground01_alt3.png");
+            Gdx.app.log("Textures", "Loaded backgroundTexture");
+        } catch (Exception e) {
+            Gdx.app.error("Textures", "Failed to load backgroundTexture: " + e.getMessage());
+        }
 
-        // Resource Textures
-        resourceTexture1 = new Texture("mineableobject1.png");
-        resourceTexture2 = new Texture("mineableobject2.png");
-        resourceTexture3 = new Texture("mineableobject3.png");
-        resourceTexture4 = new Texture("mineableobject4.png");
-        resourceTexture5 = new Texture("mineableobject5.png");
-        resourceTexture6 = new Texture("mineableobject6.png");
+        try {
+            minerTexture = new Texture("miner.png");
+            Gdx.app.log("Textures", "Loaded minerTexture");
+        } catch (Exception e) {
+            Gdx.app.error("Textures", "Failed to load minerTexture: " + e.getMessage());
+        }
 
-        // Tool Textures
-        toolTexture1 = new Texture("pickaxe-1.png");
-        toolTexture2 = new Texture("pickaxe-2.png");
+        try {
+            resourceTexture1 = new Texture("mineableobject1.png");
+            Gdx.app.log("Textures", "Loaded resourceTexture1");
+            resourceTexture2 = new Texture("mineableobject2.png");
+            Gdx.app.log("Textures", "Loaded resourceTexture2");
+            resourceTexture3 = new Texture("mineableobject3.png");
+            Gdx.app.log("Textures", "Loaded resourceTexture3");
+            resourceTexture4 = new Texture("mineableobject4.png");
+            Gdx.app.log("Textures", "Loaded resourceTexture4");
+            resourceTexture5 = new Texture("mineableobject5.png");
+            Gdx.app.log("Textures", "Loaded resourceTexture5");
+            resourceTexture6 = new Texture("mineableobject6.png");
+            Gdx.app.log("Textures", "Loaded resourceTexture6");
+        } catch (Exception e) {
+            Gdx.app.error("Textures", "Failed to load resource textures: " + e.getMessage());
+        }
 
-        // Button Changes
-        resourceChangeTexture = new Texture("resource-switch.png");
-        toolChangeTexture = new Texture("tool-switch.png");
-        resetScoreTexture = new Texture("resetScore.png");
+        try {
+            toolTexture1 = new Texture("pickaxe-1.png");
+            Gdx.app.log("Textures", "Loaded toolTexture1");
+            toolTexture2 = new Texture("pickaxe-2.png");
+            Gdx.app.log("Textures", "Loaded toolTexture2");
+        } catch (Exception e) {
+            Gdx.app.error("Textures", "Failed to load tool textures: " + e.getMessage());
+        }
 
-        // Health Bar
-        healthBarTexture = new Texture("healthBarTexture.png");
+        try {
+            resourceChangeTexture = new Texture("resource-switch.png");
+            Gdx.app.log("Textures", "Loaded resourceChangeTexture");
+            toolChangeTexture = new Texture("tool-switch.png");
+            Gdx.app.log("Textures", "Loaded toolChangeTexture");
+            resetScoreTexture = new Texture("resetScore.png");
+            Gdx.app.log("Textures", "Loaded resetScoreTexture");
+        } catch (Exception e) {
+            Gdx.app.error("Textures", "Failed to load button textures: " + e.getMessage());
+        }
+
+        try {
+            healthBarTexture = new Texture("healthBarTexture.png");
+            Gdx.app.log("Textures", "Loaded healthBarTexture");
+        } catch (Exception e) {
+            Gdx.app.error("Textures", "Failed to load healthBarTexture: " + e.getMessage());
+            Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+            pixmap.setColor(1, 1, 1, 1); // White
+            pixmap.fill();
+            healthBarTexture = new Texture(pixmap);
+            pixmap.dispose();
+            Gdx.app.log("Textures", "Created fallback healthBarTexture");
+        }
     }
 
-    // Dispose all assets
     public static void dispose() {
         backgroundTexture.dispose();
         minerTexture.dispose();
         resourceTexture1.dispose();
         resourceTexture2.dispose();
+        resourceTexture3.dispose();
+        resourceTexture4.dispose();
+        resourceTexture5.dispose();
+        resourceTexture6.dispose();
         toolTexture1.dispose();
         toolTexture2.dispose();
         resourceChangeTexture.dispose();
