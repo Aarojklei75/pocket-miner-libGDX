@@ -20,8 +20,8 @@ public class SpriteManager {
         minerSprite.setSize(200, 200);
         minerSprite.setPosition(100, 150);
         minerSprite.setOrigin(
-            minerSprite.getX() - minerSprite.getY() / 2,
-            minerSprite.getX() - minerSprite.getY() / 2
+                minerSprite.getX() - minerSprite.getY() / 2,
+                minerSprite.getX() - minerSprite.getY() / 2
         );
 
         // Tool
@@ -35,8 +35,8 @@ public class SpriteManager {
             toolSprite.setPosition(185, 200);
         }
         toolSprite.setOrigin(
-            toolSprite.getX() - toolSprite.getY() / 2,
-            toolSprite.getX() - toolSprite.getY() / 2
+                toolSprite.getX() - toolSprite.getY() / 2,
+                toolSprite.getX() - toolSprite.getY() / 2
         );
 
         // Resource
@@ -67,13 +67,13 @@ public class SpriteManager {
 
         // HealthBar
         healthBar = new HealthBar
-            (10,
-                resourceSprite.getX(),
-                resourceSprite.getY() + resourceSprite.getHeight(),
-                resourceSprite.getWidth(),
-                15,
-                Textures.healthBarTexture
-            );
+                (10,
+                        resourceSprite.getX(),
+                        resourceSprite.getY() + resourceSprite.getHeight(),
+                        resourceSprite.getWidth(),
+                        15,
+                        Textures.healthBarTexture
+                );
 
     }
     public HealthBar getHealthBar() {
