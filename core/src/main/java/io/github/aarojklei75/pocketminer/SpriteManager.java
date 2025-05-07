@@ -10,9 +10,9 @@ public class SpriteManager {
 
     private final HealthBar healthBar;
     public Sprite minerSprite, toolSprite, resourceSprite;
-    public Sprite resourceChangeSprite, toolChangeSprite, resetScoreSprite;
+    public Sprite resourceChangeSprite, toolChangeSprite, resetScoreSprite, upgradeSprite;
 
-    public Rectangle resourceBounds, resourceChangeBounds, toolChangeBounds, resetScoreBounds;
+    public Rectangle resourceBounds, resourceChangeBounds, toolChangeBounds, resetScoreBounds, upgradeBounds;
 
     public SpriteManager(Viewport viewport, Texture[] resourceTextures, Texture currentToolTexture, int currentTool, int currentResourceIndex) {
         // Miner
@@ -48,22 +48,26 @@ public class SpriteManager {
         resourceChangeSprite = new Sprite(Textures.resourceChangeTexture);
         toolChangeSprite = new Sprite(Textures.toolChangeTexture);
         resetScoreSprite = new Sprite(Textures.resetScoreTexture);
+        upgradeSprite = new Sprite(Textures.upgradeTexture);
 
         resourceChangeSprite.setSize(100, 50);
         toolChangeSprite.setSize(100, 50);
         resetScoreSprite.setSize(100, 50);
+        upgradeSprite.setSize(100,50);
 
         float worldWidth = viewport.getWorldWidth();
 
-        resourceChangeSprite.setPosition(worldWidth / 2 - 100, 400);
-        toolChangeSprite.setPosition(worldWidth / 2 + 25, 400);
-        resetScoreSprite.setPosition(worldWidth / 2 + 150, 400);
+        resourceChangeSprite.setPosition(worldWidth / 2 - 175, 420);
+        toolChangeSprite.setPosition(worldWidth / 2 - 50, 420);
+        resetScoreSprite.setPosition(worldWidth / 2 + 75, 420);
+        upgradeSprite.setPosition(worldWidth / 2 + 200, 420);
 
         // Bounds
         resourceBounds = new Rectangle(resourceSprite.getX(), resourceSprite.getY(), resourceSprite.getWidth(), resourceSprite.getHeight());
         resourceChangeBounds = new Rectangle(resourceChangeSprite.getX(), resourceChangeSprite.getY(), resourceChangeSprite.getWidth(), resourceChangeSprite.getHeight());
         toolChangeBounds = new Rectangle(toolChangeSprite.getX(), toolChangeSprite.getY(), toolChangeSprite.getWidth(), toolChangeSprite.getHeight());
         resetScoreBounds = new Rectangle(resetScoreSprite.getX(), resetScoreSprite.getY(), resetScoreSprite.getWidth(), resetScoreSprite.getHeight());
+        upgradeBounds = new Rectangle(upgradeSprite.getX(), upgradeSprite.getY(), upgradeSprite.getWidth(), upgradeSprite.getHeight());
 
         // HealthBar
         healthBar = new HealthBar

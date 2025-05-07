@@ -19,6 +19,7 @@ public class Textures {
     protected static Texture toolChangeTexture;
     protected static Texture resetScoreTexture;
     protected static Texture healthBarTexture;
+    protected static Texture upgradeTexture;
 
     public static void load() {
         try {
@@ -68,6 +69,8 @@ public class Textures {
             Gdx.app.log("Textures", "Loaded toolChangeTexture");
             resetScoreTexture = new Texture("resetScore.png");
             Gdx.app.log("Textures", "Loaded resetScoreTexture");
+            upgradeTexture = new Texture("upgradeTexture.png");
+            Gdx.app.log("Textures", "Loaded upgradeTexture");
         } catch (Exception e) {
             Gdx.app.error("Textures", "Failed to load button textures: " + e.getMessage());
         }
@@ -84,6 +87,7 @@ public class Textures {
             pixmap.dispose();
             Gdx.app.log("Textures", "Created fallback healthBarTexture");
         }
+
     }
 
     public static void dispose() {
@@ -101,5 +105,6 @@ public class Textures {
         toolChangeTexture.dispose();
         resetScoreTexture.dispose();
         healthBarTexture.dispose();
+        upgradeTexture.dispose();
     }
 }

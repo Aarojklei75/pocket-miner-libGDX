@@ -152,7 +152,8 @@ public class Main implements ApplicationListener {
         spriteManager.toolChangeSprite.draw(spriteBatch);
         spriteManager.resourceChangeSprite.draw(spriteBatch);
         spriteManager.resetScoreSprite.draw(spriteBatch);
-        font.draw(spriteBatch, "Score: " + score, 50, 430);
+        spriteManager.upgradeSprite.draw(spriteBatch);
+        font.draw(spriteBatch, "Score: " + score, 15, 455);
         spriteBatch.end();
     }
 
