@@ -78,7 +78,7 @@ public class Textures {
             Gdx.app.log("Textures", "Loaded toolChangeTexture");
             resetScoreTexture = new Texture("resetScore.png");
             Gdx.app.log("Textures", "Loaded resetScoreTexture");
-            upgradeTexture = new Texture("upgradeTexture.png");
+            upgradeTexture = new Texture("PocketMinerButton.png");
             Gdx.app.log("Textures", "Loaded upgradeTexture");
             returnTexture = new Texture("return.jpg");
             Gdx.app.log("Textures", "Loaded returnTexture");
