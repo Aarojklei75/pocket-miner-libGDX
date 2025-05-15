@@ -23,8 +23,4 @@ public final class Settings {
     public static final int RS_X                        = 500;
     public static final int RS_Y                        = 150;
 
-    // RSC = RESOURCE_CHANGE_SPRITE
-    //public static final int RSC_HEIGHT =;
-    //public static final int RSC_WIDTH                   =;
-
 }
