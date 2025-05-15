@@ -80,7 +80,7 @@ public class Textures {
             Gdx.app.log("Textures", "Loaded resetScoreTexture");
             upgradeTexture = new Texture("PocketMinerButton.png");
             Gdx.app.log("Textures", "Loaded upgradeTexture");
-            returnTexture = new Texture("return.jpg");
+            returnTexture = new Texture("PocketMinerButton2.png");
             Gdx.app.log("Textures", "Loaded returnTexture");
         } catch (Exception e) {
             Gdx.app.error("Textures", "Failed to load button textures: " + e.getMessage());
