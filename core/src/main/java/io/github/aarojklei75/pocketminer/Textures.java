@@ -19,6 +19,9 @@ public class Textures {
     protected static Texture toolChangeTexture;
     protected static Texture resetScoreTexture;
     protected static Texture healthBarTexture;
+    protected static Texture upgradeTexture;
+    protected static Texture returnTexture;
+    protected static Texture menuTexture;
 
     public static void load() {
         try {
@@ -26,6 +29,13 @@ public class Textures {
             Gdx.app.log("Textures", "Loaded backgroundTexture");
         } catch (Exception e) {
             Gdx.app.error("Textures", "Failed to load backgroundTexture: " + e.getMessage());
+        }
+
+        try{
+            menuTexture = new Texture("menuBackground.png");
+            Gdx.app.log("Textures", "Loaded menuTexture");
+        } catch (Exception e) {
+            Gdx.app.error("Textures", "Failed to load menuTexture" + e.getMessage());
         }
 
         try {
@@ -68,6 +78,10 @@ public class Textures {
             Gdx.app.log("Textures", "Loaded toolChangeTexture");
             resetScoreTexture = new Texture("resetScore.png");
             Gdx.app.log("Textures", "Loaded resetScoreTexture");
+            upgradeTexture = new Texture("PocketMinerButton.png");
+            Gdx.app.log("Textures", "Loaded upgradeTexture");
+            returnTexture = new Texture("return.jpg");
+            Gdx.app.log("Textures", "Loaded returnTexture");
         } catch (Exception e) {
             Gdx.app.error("Textures", "Failed to load button textures: " + e.getMessage());
         }
@@ -84,6 +98,7 @@ public class Textures {
             pixmap.dispose();
             Gdx.app.log("Textures", "Created fallback healthBarTexture");
         }
+
     }
 
     public static void dispose() {
@@ -101,5 +116,6 @@ public class Textures {
         toolChangeTexture.dispose();
         resetScoreTexture.dispose();
         healthBarTexture.dispose();
+        upgradeTexture.dispose();
     }
 }

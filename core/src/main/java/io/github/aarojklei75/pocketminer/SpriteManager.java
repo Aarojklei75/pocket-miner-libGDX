@@ -9,10 +9,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class SpriteManager {
 
     private final HealthBar healthBar;
-    public Sprite minerSprite, toolSprite, resourceSprite;
-    public Sprite resourceChangeSprite, toolChangeSprite, resetScoreSprite;
+    public Sprite minerSprite, toolSprite, resourceSprite, menuSprite;
+    public Sprite resourceChangeSprite, toolChangeSprite, resetScoreSprite, upgradeSprite, returnSprite;
 
-    public Rectangle resourceBounds, resourceChangeBounds, toolChangeBounds, resetScoreBounds;
+    public Rectangle resourceBounds, resourceChangeBounds, toolChangeBounds, resetScoreBounds, upgradeBounds, returnBounds;
 
     public SpriteManager(Viewport viewport, Texture[] resourceTextures, Texture currentToolTexture, int currentTool, int currentResourceIndex) {
         // Miner
@@ -39,6 +39,12 @@ public class SpriteManager {
                 toolSprite.getX() - toolSprite.getY() / 2
         );
 
+        //Menu background
+        menuSprite = new Sprite(Textures.menuTexture);
+        menuSprite.setSize(viewport.getWorldWidth() - 40, viewport.getWorldHeight() - 90);
+        menuSprite.setPosition(75,-1000);
+
+
         // Resource
         resourceSprite = new Sprite(resourceTextures[currentResourceIndex]);
         resourceSprite.setSize(Settings.RS_WIDTH, Settings.RS_HEIGHT);
@@ -48,22 +54,30 @@ public class SpriteManager {
         resourceChangeSprite = new Sprite(Textures.resourceChangeTexture);
         toolChangeSprite = new Sprite(Textures.toolChangeTexture);
         resetScoreSprite = new Sprite(Textures.resetScoreTexture);
+        upgradeSprite = new Sprite(Textures.upgradeTexture);
+        returnSprite = new Sprite(Textures.returnTexture);
 
         resourceChangeSprite.setSize(100, 50);
         toolChangeSprite.setSize(100, 50);
         resetScoreSprite.setSize(100, 50);
+        upgradeSprite.setSize(100,50);
+        returnSprite.setSize(100, 50);
 
         float worldWidth = viewport.getWorldWidth();
 
-        resourceChangeSprite.setPosition(worldWidth / 2 - 100, 400);
-        toolChangeSprite.setPosition(worldWidth / 2 + 25, 400);
-        resetScoreSprite.setPosition(worldWidth / 2 + 150, 400);
+        resourceChangeSprite.setPosition(worldWidth / 2 - 175, 420);
+        toolChangeSprite.setPosition(worldWidth / 2 - 50, 420);
+        resetScoreSprite.setPosition(worldWidth / 2 + 75, 420);
+        upgradeSprite.setPosition(worldWidth / 2 + 200, 420);
+        returnSprite.setPosition(75, -500);
 
         // Bounds
         resourceBounds = new Rectangle(resourceSprite.getX(), resourceSprite.getY(), resourceSprite.getWidth(), resourceSprite.getHeight());
         resourceChangeBounds = new Rectangle(resourceChangeSprite.getX(), resourceChangeSprite.getY(), resourceChangeSprite.getWidth(), resourceChangeSprite.getHeight());
         toolChangeBounds = new Rectangle(toolChangeSprite.getX(), toolChangeSprite.getY(), toolChangeSprite.getWidth(), toolChangeSprite.getHeight());
         resetScoreBounds = new Rectangle(resetScoreSprite.getX(), resetScoreSprite.getY(), resetScoreSprite.getWidth(), resetScoreSprite.getHeight());
+        upgradeBounds = new Rectangle(upgradeSprite.getX(), upgradeSprite.getY(), upgradeSprite.getWidth(), upgradeSprite.getHeight());
+        returnBounds = new Rectangle(returnSprite.getX(),returnSprite.getY(),returnSprite.getWidth(), returnSprite.getHeight());
 
         // HealthBar
         healthBar = new HealthBar
