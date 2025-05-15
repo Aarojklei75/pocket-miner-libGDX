@@ -63,12 +63,11 @@ public class SpriteManager {
         upgradeSprite.setSize(100,50);
         returnSprite.setSize(100, 50);
 
-        float worldWidth = viewport.getWorldWidth();
 
-        resourceChangeSprite.setPosition(worldWidth / 2 - 175, 420);
-        toolChangeSprite.setPosition(worldWidth / 2 - 50, 420);
-        resetScoreSprite.setPosition(worldWidth / 2 + 75, 420);
-        upgradeSprite.setPosition(worldWidth / 2 + 200, 420);
+        resourceChangeSprite.setPosition(Settings.RCS_X, Settings.RCS_Y );
+        toolChangeSprite.setPosition(Settings.TCS_X, Settings.TCS_Y );
+        resetScoreSprite.setPosition(Settings.RST_X, Settings.RST_Y);
+        upgradeSprite.setPosition(Settings.UPGR_X, Settings.UPGR_Y);
         returnSprite.setPosition(75, -500);
 
         // Bounds
@@ -82,8 +81,8 @@ public class SpriteManager {
         // HealthBar
         healthBar = new HealthBar
                 (10,
-                        resourceSprite.getX(),
-                        resourceSprite.getY() + resourceSprite.getHeight(),
+                        Settings.RS_X,
+                        Settings.RS_Y + resourceSprite.getHeight(),
                         resourceSprite.getWidth(),
                         15,
                         Textures.healthBarTexture

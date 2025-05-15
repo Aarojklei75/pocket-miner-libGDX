@@ -4,5 +4,5 @@ public class SaveData {
     public int score;
     public int currentTool;
     public int currentResource;
-
+    public int level; // Added for SaveSystem
 }

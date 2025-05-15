@@ -117,5 +117,7 @@ public class Textures {
         resetScoreTexture.dispose();
         healthBarTexture.dispose();
         upgradeTexture.dispose();
+        returnTexture.dispose();
+        menuTexture.dispose();
     }
 }

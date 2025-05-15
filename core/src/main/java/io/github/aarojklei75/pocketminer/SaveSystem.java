@@ -14,7 +14,7 @@ public class SaveSystem {
     }
 
     // Save system - Isabel
-    public void savePlayerData(int score, int level, String playerName) {
+    public void savePlayerData(int score, String playerName, int level) {
         // Store data using the appropriate data types
         prefs.putInteger(KEY_SCORE, score);
         prefs.putInteger(KEY_LEVEL, level);
@@ -24,15 +24,8 @@ public class SaveSystem {
         prefs.flush();
     }
 
-    public int getScore() {
-        // Retrieve data using the key with
-        // a default value if the key doesn't exist
-        return prefs.getInteger(KEY_SCORE, 0);
-    }
-
-    public int getLevel() {
-        return prefs.getInteger(KEY_LEVEL, 0); // Default is 0
-    }
+    public int getScore() {return prefs.getInteger(KEY_SCORE, 0);}
+    public int getLevel() {return prefs.getInteger(KEY_LEVEL, 1);}
 
     public String getPlayerName() {
         return prefs.getString(KEY_PLAYER_NAME, ""); // Default player name
